@@ -1,40 +1,63 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose({
+const userSchema = new mongoose.Schema({
     _id: String,
     name: {
         type: String,
-        required: true,
-        minLength: [3, "Name&Surname part should be least 3 character"]
+        required: [true, "Ad soyad kısmı zorunludur!"],
+        minlength: [3, "Ad soyad kısmı en az 3 karakter olmalıdır!"] // "minLength" yerine "minlength" olmalı
     },
     userName: {
         type: String,
-        required: true,
-        minLength: [3, "Username part should be least 3 character"],
+        required: [true, "Kullanıcı adı kısmı zorunludur!"],
+        minlength: [3, "Kullanıcı adı kısmı en az 3 karakter olmalıdır!"],
         unique: true
     },
     email: {
         type: String,
-        required: true,
-        minLength: [3, "Mail part should be least 3 character"],
-        email: ["Write a valid e-mail address!"],
-        unique: true
+        required: [true, "Mail adresi zorunludur!"],
+        minlength: [3, "Mail adresi en az 3 karakter olmalıdır!"],
+        unique: true,
+        match: [/\S+@\S+\.\S+/, "Geçerli bir mail adresi yazın!"] // E-posta format doğrulaması
     },
     imageUrl: {
-        type: String,        
+        type: String,
+        default: "" // Varsayılan olarak boş bir string atanabilir
     },
     password: {
         type: String,
-        required: true,
+        required: [true, "Şifre zorunludur!"]
     },
-    mailConfirmCode: String,
-    isMailConfirm: Boolean,
-    createdDate: Date,
-    updatedDate: Date,
-    isAdmin: Boolean,
-    forgotPasswordCode: String,
-    isForgotPasswordCodeActive: Boolean
-})
+    mailConfirmCode: {
+        type: String,
+        default: null
+    },
+    isMailConfirm: {
+        type: Boolean,
+        default: false // Varsayılan olarak doğrulanmamış
+    },
+    createdDate: {
+        type: Date,
+        default: Date.now // Varsayılan olarak oluşturulma tarihi
+    },
+    updatedDate: {
+        type: Date,
+        default: Date.now // Varsayılan olarak güncelleme tarihi
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false // Varsayılan olarak admin değil
+    },
+    forgotPasswordCode: {
+        type: String,
+        default: null
+    },
+    isForgotPasswordCodeActive: {
+        type: Boolean,
+        default: false // Varsayılan olarak inaktif
+    }
+});
 
-const User = userSchema.model("User",userSchema);
+const User = mongoose.model("User", userSchema);
+
 module.exports = User;
