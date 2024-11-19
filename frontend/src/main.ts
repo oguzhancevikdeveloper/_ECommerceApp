@@ -4,7 +4,7 @@ import { bootstrapApplication, BrowserModule } from "@angular/platform-browser";
 import { AppComponent } from "./app/app.component";
 import { HttpErrorResponse, provideHttpClient } from '@angular/common/http'
 import { RouterModule } from "@angular/router";
-import { routes } from "./app/app.routes";
+import { routes } from "./app/router";
 import { StoreModule } from "@ngrx/store";
 import { loadingReducer } from "./app/commons/components/loading-button/states/loading-reducer";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

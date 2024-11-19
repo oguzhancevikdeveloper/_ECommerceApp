@@ -1,1 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+@import url("./assets/bootstrap.css");
+@import url("../node_modules/ngx-toastr/toastr.css");
+@import url("./assets/datatables/datatables.css");
+a{
+    cursor: pointer;
+    color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1)) !important;
+    text-decoration: none;
+}
+
+.center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+body{
+    background-color: #f3f3f3 !important;
+}
+
+table thead{
+    background-color: #f1f1f1;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.strong{
+    font-weight: 600;
+}

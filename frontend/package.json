@@ -23,10 +23,13 @@
     "@ngrx/store": "^18.1.1",
     "@sweetalert2/ngx-sweetalert2": "^12.4.0",
     "@tbh-theme/palette": "^0.0.23",
+    "crypto-js": "^4.2.0",
+    "ngx-infinite-scroll": "^18.0.0",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",
     "swal": "^0.1.0",
     "toastr": "^2.1.4",
+    "tr-currency": "^18.0.5",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },
