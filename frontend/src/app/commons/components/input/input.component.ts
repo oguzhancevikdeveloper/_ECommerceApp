@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ValidDirective } from '../../directives/valid.directive';
 
 @Component({
@@ -7,7 +7,7 @@ import { ValidDirective } from '../../directives/valid.directive';
   standalone: true,
   imports: [CommonModule, ValidDirective],
   templateUrl: './input.component.html',
-  styleUrl: './input.component.css'
+  styleUrls: ['./input.component.css']
 })
 export class InputComponent {
   title: string = "";
