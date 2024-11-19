@@ -52,9 +52,14 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./src/assets/bootstrap.bundle.js",
+              "./src/assets/font-awesome.js",
+              "./src/assets/jquery.js",
+              "./src/assets/datatables/datatables.js"]
           },
           "configurations": {
             "production": {
