@@ -45,41 +45,49 @@ router.post("/removeById", async(req, res)=>{
 })
 
 //Ürün Listesi Getir
-router.post("/", async(req, res)=>{
-    response(res, async ()=>{
-        const {pageNumber, pageSize, search} = req.body;
-       
-        let productCount = await Product.find({
-            $or: [
-            { name: { $regex: search, $options: 'i' } },
-            { description: { $regex: search, $options: 'i' } }
-            ]
-        }).count();
-        
-        let products = await Product
+router.post("/", async (req, res) => {
+    response(res, async () => {
+        const { pageNumber = 1, pageSize = 10, search = "" } = req.body;
+
+        try {
+            // Ürün sayısını hesapla
+            let productCount = await Product.find({
+                $or: [
+                    { name: { $regex: search, $options: 'i' } },
+                    { description: { $regex: search, $options: 'i' } }
+                ]
+            }).countDocuments();
+
+            // Ürünleri getir
+            let products = await Product
                 .find({
-                        $or: [
+                    $or: [
                         { name: { $regex: search, $options: 'i' } },
                         { description: { $regex: search, $options: 'i' } }
-                        ]
-                    })
-                .sort({name: 1})
-                .populate("categories")
-                .skip((pageNumber - 1) * pageSize)
-                .limit(pageSize);;
+                    ]
+                })
+                .sort({ name: 1 })  // Ürünleri isme göre sıralıyoruz
+                .populate("categories")  // Kategorileri dahil ediyoruz
+                .skip((pageNumber - 1) * pageSize)  // Sayfalama offset
+                .limit(pageSize);  // Sayfa başına ürün sayısı
 
-        let totalPageCount = Math.ceil(productCount / pageSize);
-        let model = {
-            data: products,
-            pageNumber: pageNumber,
-            pageSize: pageSize,
-            totalPageCount: totalPageCount,
-            isFirstPage: pageNumber === 1 ? true : false,
-            isLastPage: totalPageCount === pageNumber ? true : false
-        };
-        res.json(model);
+            let totalPageCount = Math.ceil(productCount / pageSize);
+            let model = {
+                data: products,
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+                totalPageCount: totalPageCount,
+                isFirstPage: pageNumber === 1,
+                isLastPage: totalPageCount === pageNumber
+            };
+
+            res.json(model);  // Sonuçları döndürüyoruz
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Veritabanı hatası", error: error.message });
+        }
     });
-})
+});
 
 //Ürünün Aktif/Pasif Durumunu Değiştir
 router.post("/changeActiveStatus", async(req, res)=>{
