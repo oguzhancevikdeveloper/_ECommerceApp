@@ -1,9 +1,13 @@
+import { Injectable } from "@angular/core";
 import { MessageResultModel } from "../../../commons/models/message-result.model";
 import { PaginationResponseModel } from "../../../commons/models/pagination-response.model";
 import { RequestModel } from "../../../commons/models/request.model";
 import { GenericHttpService } from "../../../commons/services/generic-http.service";
 import { ProductModel } from "../models/product.model";
 
+@Injectable({
+  providedIn: 'root'
+})
 export class ProductService {
 
     constructor(

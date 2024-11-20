@@ -19,7 +19,7 @@ import { ThemePalette } from '@angular/material/core';
   standalone: true,
   imports: [SharedModule,ProductPipe, MatSlideToggleModule],
   templateUrl: './products.component.html',
-  styleUrl: './products.component.css'
+  styleUrls: ['./products.component.css']
 })
 export class ProductsComponent {
   color: ThemePalette = 'accent';  

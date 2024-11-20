@@ -2,12 +2,13 @@ const express = require("express");
 const router = express.Router();
 const {v4 : uuidv4} = require("uuid");
 const User = require("../models/user");
-
+const bcrypt = require("bcrypt");
 const upload  = require("../services/file.service");
 const token = require("../services/token.service");
 let sendMail = require("../services/mail.service");
 const MailOptions = require("../dtos/mail-options");
 const errorHandler = require("../services/error.service");
+const jwt = require('jsonwebtoken');
 const response = require("../services/response.service");
 
 router.post("/register",async (req,res) => {
@@ -103,45 +104,37 @@ router.post("/confirm-mail", async (req, res) => {
 
 //Giriş İşlemi
 router.post("/login", async (req, res) => {
-    response(res, async()=>{
+    response(res, async () => {
         const { emailOrUserName, password } = req.body;
 
-        var user = await User.find({ email: emailOrUserName });
-        if (user.length == 0) {
-            user = await User.find({ userName: emailOrUserName });
-            if (user.length == 0) {
-                errorHandler(res,{ message: "Kullanıcı bulunamadı!" });                
-            } else {
-                if (user[0].password == password) {
-                    if (user[0].isMailConfirm) {
-                        const payload = {
-                            user: user[0]
-                        }
-                        res.json({ token: token(payload), user: user[0] });
-                    } else {
-                        errorHandler(res,{ message: "Mail adresiniz onaylı değil! Onaylamadan giriş yapamazsınız!" });                        
-                    }
-                } else {
-                    errorHandler(res,{ message: "Şifre yanlış!" });                    
-                }
-            }
-        } else {
-            if (user[0].password == password) {
-                if (user[0].isMailConfirm) {
-                    const payload = {
-                        user: user[0]
-                    }
-                    res.json({ token: token(payload), user: user[0] });
-                } else {
-                    errorHandler(res,{ message: "Mail adresiniz onaylı değil! Onaylamadan giriş yapamazsınız!" });
-                }
-            } else {
-                errorHandler(res,{ message: "Şifre yanlış!" });
-            }
-        }
-    });    
-});
+        // E-posta veya kullanıcı adı ile kullanıcıyı bulma
+        let user = await User.findOne({ $or: [{ email: emailOrUserName }, { userName: emailOrUserName }] });
 
+        if (!user) {
+            return errorHandler(res, { message: "Kullanıcı bulunamadı!" });
+        }
+
+        // Şifreyi kontrol et
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            return errorHandler(res, { message: "Şifre yanlış!" });
+        }
+
+        // Mail onayı kontrolü
+        if (!user.isMailConfirm) {
+            return errorHandler(res, { message: "Mail adresiniz onaylı değil! Onaylamadan giriş yapamazsınız!" });
+        }
+
+        // Kullanıcı bilgilerini payload olarak göndermek
+        const payload = { user };
+
+        // Token'ı 1 saatlik bir süreyle oluştur
+        const token = jwt.sign(payload, 'your_secret_key', { expiresIn: '1h' }); // 1 saatlik token
+
+        res.json({ token, user });
+    });
+});
 //Google Login İşlemi
 router.post("/googleLogin", async (req,res)=> {
     response(res, async()=>{

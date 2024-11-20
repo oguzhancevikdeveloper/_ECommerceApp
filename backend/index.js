@@ -41,5 +41,8 @@ app.use("/api/baskets/", basketRouter);
 //Product Router
 app.use("/api/products/", productRouter);
 
+app.use('/uploads', express.static('uploads'));
+
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log("Sunucu çalışıyor..."));

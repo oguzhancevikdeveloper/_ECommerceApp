@@ -33,7 +33,7 @@ router.post("/add", async (req, res)=>{
 router.post("/getCount", async (req, res)=>{
     response(res, async() => {
         const {userId} = req.body;
-        const count = await Basket.find({userId: userId}).count();
+        const count = await Basket.find({ userId: userId }).countDocuments();
         res.json({data: count});
     });
 });
